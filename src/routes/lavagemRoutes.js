@@ -25,8 +25,17 @@ router.get('/', async (req, res) => {
 
 // Editar lavagem
 router.put('/:id', async (req, res) => {
+  const { status } = req.body; // Extraindo apenas o status do corpo da requisição
+  
+  if (!status) {
+    return res.status(400).json({ message: 'Status é obrigatório.' });
+  }
+
   try {
-    const lavagem = await Lavagem.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const lavagem = await Lavagem.findByIdAndUpdate(req.params.id, { status }, { new: true });
+    if (!lavagem) {
+      return res.status(404).json({ message: 'Lavagem não encontrada.' });
+    }
     res.json(lavagem);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -36,7 +45,10 @@ router.put('/:id', async (req, res) => {
 // Excluir lavagem
 router.delete('/:id', async (req, res) => {
   try {
-    await Lavagem.findByIdAndDelete(req.params.id);
+    const deletedLavagem = await Lavagem.findByIdAndDelete(req.params.id);
+    if (!deletedLavagem) {
+      return res.status(404).json({ message: 'Lavagem não encontrada.' });
+    }
     res.status(204).send();
   } catch (err) {
     res.status(400).json({ message: err.message });

@@ -2,6 +2,7 @@
 const clienteRoutes = require('./src/routes/clienteRoutes');
 const lavagemRoutes = require('./src/routes/lavagemRoutes');
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
+const serviceRoutes = require('./src/routes/serviceRoutes');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -29,6 +30,7 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/lavagens', lavagemRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/servicos', serviceRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
