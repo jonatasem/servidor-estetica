@@ -4,7 +4,9 @@ const Lavagem = require('../models/Lavagem');
 
 // Criar lavagem
 router.post('/', async (req, res) => {
-  const lavagem = new Lavagem(req.body);
+  const { clienteId, placa, modelo, tipoLavagem, preco } = req.body;
+  const lavagem = new Lavagem({ clienteId, placa, modelo, tipoLavagem, preco });
+
   try {
     const savedLavagem = await lavagem.save();
     res.status(201).json(savedLavagem);

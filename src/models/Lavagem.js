@@ -6,6 +6,7 @@ const LavagemSchema = new mongoose.Schema({
   modelo: { type: String, required: true },
   tipoLavagem: { type: String, required: true },
   status: { type: String, enum: ['em andamento', 'concluído'], default: 'em andamento' },
+  preco: { type: Number, required: true }
 });
 
 module.exports = mongoose.model('Lavagem', LavagemSchema);

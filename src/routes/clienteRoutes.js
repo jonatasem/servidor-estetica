@@ -4,7 +4,16 @@ const Cliente = require('../models/Cliente');
 
 // Criar cliente
 router.post('/', async (req, res) => {
-  const cliente = new Cliente(req.body);
+  const cliente = new Cliente({
+    nome: req.body.nome,
+    telefone: req.body.telefone,
+    endereco: {
+      rua: req.body.endereco.rua,
+      numero: req.body.endereco.numero,
+      cidade: req.body.endereco.cidade
+    }
+  });
+
   try {
     const savedCliente = await cliente.save();
     res.status(201).json(savedCliente);
@@ -61,5 +70,6 @@ router.delete('/:id', async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
 
 module.exports = router;
