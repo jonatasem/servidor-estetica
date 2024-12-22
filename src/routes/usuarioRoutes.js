@@ -65,4 +65,72 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Listar todos os usuários
+router.get('/', async (req, res) => {
+  try {
+    const usuarios = await Usuario.find();
+    res.json(usuarios);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao obter usuários.' });
+  }
+});
+
+// Obter um usuário específico por ID
+router.get('/:id', async (req, res) => {
+  try {
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+    res.json(usuario);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao obter usuário.' });
+  }
+});
+
+// Atualizar um usuário
+router.put('/:id', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+
+    // Atualiza os campos
+    if (username) {
+      usuario.username = username;
+    }
+    if (password) {
+      const salt = bcrypt.genSaltSync(10);
+      usuario.password = bcrypt.hashSync(password, salt);
+    }
+
+    const updatedUsuario = await usuario.save();
+    res.json({ message: 'Usuário atualizado com sucesso!', usuario: updatedUsuario });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao atualizar usuário.' });
+  }
+});
+
+// Deletar um usuário
+router.delete('/:id', async (req, res) => {
+  try {
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' });
+    }
+
+    await usuario.remove();
+    res.json({ message: 'Usuário deletado com sucesso!' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erro ao deletar usuário.' });
+  }
+});
+
 module.exports = router;
